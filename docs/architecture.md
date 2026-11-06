@@ -2,27 +2,27 @@
 
 ## Decisions
 
-Use a modular application with explicit frontend, interface, domain, and infrastructure boundaries. Start with PostgreSQL plus pgvector and file/object storage. Keep the web API and MCP adapter thin. Keep processing stages independent of HTTP requests and reusable by the worker and CLI tooling.
+Use a modular application with explicit frontend, interface, domain, and infrastructure boundaries. Start with PostgreSQL plus pgvector and file/object storage. Keep the web API and MCP adapter thin. Keep processing stages independent of HTTP requests and reusable by the worker and CLI tooling. Reuse the inspected base, FastAPI and Next.js templates; see the [template assessment](research/template-assessment.md) and [implementation map](implementation-plan.md). Statuses and outstanding choices are recorded in the [decision register](decisions/README.md) and [open questions](open-questions.md).
 
 Proposed application structure:
 
 ```text
-frontend/                         React + TypeScript browser application
+frontend/                         Next.js + React + TypeScript application
 backend/
-  app/
-    interfaces/http/              FastAPI routes and transport schemas
-    interfaces/mcp/               Agent tools, resources, and prompt access
-    modules/projects/             Profiles, instructions, project membership
-    modules/sources/              Source records, versions, roles, import sets
-    modules/ingestion/handlers/   Format detection and extraction
-    modules/knowledge/            Notes, topics, revisions, evidence links
-    modules/generation/           Outlining, writing, diagram planning
-    modules/reviews/              Findings, coverage, review decisions
-    modules/search/               Keyword and semantic retrieval
-    modules/jobs/                 Checkpoints, leases, retry/cancel semantics
-    infrastructure/llm/          Provider clients, structured output, usage
-    infrastructure/database/     Persistence and migrations
-    infrastructure/storage/      Filesystem/object-store adapters
+  src/app/
+    api/                          FastAPI routes and transport schemas
+    mcp/                          Agent tools, resources, and prompt access
+    projects/                     Profiles, instructions, project membership
+    sources/                      Source records, versions, roles, import sets
+    ingestion/handlers/           Format detection and extraction
+    knowledge/                    Notes, topics, revisions, evidence links
+    generation/                   Outlining, writing, diagram planning
+    reviews/                      Findings, coverage, review decisions
+    search/                       Keyword and semantic retrieval
+    jobs/                         Commands, leases, retries and cancellation
+    llm/                          Existing template gateway and checkpointer
+    db.py                         Existing template database infrastructure
+    storage.py                    Existing object-storage infrastructure
     rendering/                    SVG diagrams and HTML/PDF production
     worker/                       Job execution entry point
   migrations/
@@ -33,7 +33,7 @@ docs/
 deployment/
 ```
 
-These paths are a proposed structure, not existing application modules.
+These paths are a proposed structure aligned with the generated templates, not existing application modules. Keep template-owned infrastructure in its established locations and put product migrations on the template's application migration branch.
 
 ## Frontend and API boundary
 
@@ -73,9 +73,17 @@ Retrieval finds candidate evidence; review checks actual support. Coverage analy
 
 ## LLM boundary and caching
 
-A provider adapter exposes task-level requests and validated responses while recording usage, latency, failures, and model configuration. Provider-specific options remain in that adapter. Credentials live in server secrets. Define timeouts, retry limits, per-run budgets, and explicit handling of invalid, incomplete, or refused responses.
+Reuse the template's `app.llm.Gateway` for model requests, structured responses, embeddings, usage records, prompt hashes, and global/user daily budgets. Add project-profile composition, application run/stage correlation, per-run limits where needed, and handling of invalid, incomplete, or refused responses. Provider-specific options remain inside the existing gateway boundary; credentials live in server secrets. The template currently configures one chat model and defaults to 1,024 output tokens per call, so section drafting needs explicit stage limits and truncation checks. Multiple task-specific models remain an optional extension.
+
+The inspected gateway rejects raw document/file attachment blocks while supporting recognised image blocks. PDF ingestion should supply extracted text and appropriately rendered page images through tested model inputs, or deliberately extend the gateway's accounting before enabling raw-file inputs.
 
 Cache extraction, page interpretations, embeddings, eligible generation results, and render outputs. Keys include the relevant source/content hashes, handler and prompt versions, project/access scope, model settings, schema, and renderer version. Cache hits must preserve provenance. Provide force-regeneration and invalidate dependent results when inputs change. Bound storage growth and define retention for transient entries. A separate cache service is an optional later optimisation.
+
+## Generation workflow
+
+Reuse the existing LangGraph PostgreSQL checkpointer and model gateway to build a custom `StateGraph`. Its stages plan, draft, verify, repair within limits, render, and audit. The selected source roles and project profile determine which stages apply; no fixed source bundle is required. Preserve checkpoints at useful boundaries, pause for review when the configured policy requires it, and validate access on every resume.
+
+The worker handles job scheduling and recovery; LangGraph handles execution state; the application tables hold notes and evidence. Keep references to immutable source/profile/note versions in graph state. Repeated writes and artifact creation must be safe on retries. Autonomous tool selection is a possible later capability, not a prerequisite for the core workflow.
 
 ## Rendering and review
 

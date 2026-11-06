@@ -9,6 +9,7 @@
   "instructions": "Explain the problem before the solution. Introduce one concept at a time. Define jargon before using it. Use a small example before internals. Preserve source references and label supplements and corrections.",
   "output": {
     "kind": "study_guide",
+    "document_unit": "class_session",
     "formats": ["html", "pdf"],
     "template_id": "notebook",
     "diagram_policy": "when_helpful",

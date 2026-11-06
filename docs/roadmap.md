@@ -1,38 +1,44 @@
 # Roadmap
 
-All milestones below are planned. The repository currently contains design documents and an example profile only.
+All milestones below are planned. The repository currently contains design documents and an example profile only. The [product brief](product-brief.md) records requirements R01-R22, the [decision register](decisions/README.md) distinguishes confirmed preferences from engineering recommendations, and the [implementation map](implementation-plan.md) gives code-level extension points. Resolve [open questions](open-questions.md) when each slice needs them.
 
 ## 1. Application foundation
 
-Establish the frontend/backend/worker boundaries, dependency locks, linting, meaningful automated checks, Docker Compose, PostgreSQL with pgvector, migrations, storage adapter, and sample environment configuration. Add project ownership/access boundaries and a development-only local identity mechanism that is explicitly blocked in production.
+Apply pinned base, FastAPI and Next.js template refs in that order, preserve this documentation, and record the exact Copier answers. Reuse their database, migrations, storage, LangChain gateway, LangGraph checkpointing, API connection and checks. Confirm the actual repository owner and reconcile file ownership and licence options. Plan reusable worker resource setup and production identity integration.
 
-Acceptance: documented startup brings up the stack; a migration creates the core project/profile/source/job schema; readiness checks include the database; a clean checkout can reproduce the setup. No LLM key is required for foundation checks.
+Acceptance: complete generated-application checks, migration round trip, container startup, frontend-to-API smoke test, and API-type consistency pass for the exact selected template combination. Setup is reproducible from a clean checkout. Local identity stays disabled in production. No live LLM call is needed for foundation checks.
 
 ## 2. Project creation and source inspection
 
-Build the project creation flow with name, purpose, input types from the handler registry, audience, free-text instructions, output choices, and review settings. Add source roles and optional import sets. Implement text/Markdown, VTT/SRT, and PDF handlers first, including image-only page detection and an explicit unprocessed-page status.
+Build project/profile and source-version models plus the creation flow with name, purpose, input types from the handler registry, audience, free-text instructions, output choices, and review settings. Add ownership, source roles, signed-upload initiation/completion and inspection routes. Implement the chosen first handlers, including image-only PDF detection and an explicit unprocessed-page status.
 
 Acceptance: a project can contain any permitted input combination or start empty; allowed types can be changed with clear treatment of existing sources; extracted passages link to original source locations; unsupported or uncertain extraction is visible rather than silently omitted.
 
-## 3. One reviewed concept and visual proof
+## 3. Worker and one reviewed concept
 
-Add a provider adapter and versioned task prompts. Generate one beginner-friendly explanation from selected source versions with checked references, a suitable diagram, a small example, and an understanding question. Create six representative template pages: title/overview, concept explanation, diagram, code walkthrough, comparison, revision.
+Build a durable job worker and a small custom LangGraph workflow using the existing model gateway and PostgreSQL checkpointer. Compose versioned project instructions with task prompts. Generate one beginner-friendly explanation from selected source versions with checked references, a suitable diagram specification, a small example, and an understanding question. Store note revisions, evidence and findings explicitly.
 
-Acceptance: compare the rendered prototype against the user-supplied sample; inspect actual page images, readability, and code copyability. Distinguish source fidelity from technical accuracy. Store model usage and the full input/version manifest. Report uncertain claims. Preserve manual edits in a separate note revision.
+Acceptance: fake/replayed-model checks cover malformed or truncated output, bounded repair, budget exhaustion, checkpoint recovery, owned pause/resume and duplicate-safe outputs. Record model-call/run correlation and the input/version manifest. Preserve manual edits and distinguish unsupported statements from technical corrections. Run a small live quality evaluation only after model and budget choices are made.
 
-## 4. Complete session workflow and quality workspace
+## 4. Visual proof and quality workspace
 
-Implement complete coverage analysis, section drafting, exercises/answers, code verification where applicable, revision notes, bounded repairs, and HTML/PDF export. Add side-by-side source review, page findings, coverage dispositions, and proposed revision diffs. Make jobs retryable from saved stages.
+Build six representative notebook-style pages: title/overview, concept explanation, diagram, code walkthrough, comparison, and revision. Implement SVG components, HTML/CSS, Chromium PDF export and rendered-page inspection. Add side-by-side source review, page findings, coverage dispositions, editing and proposed revision diffs. Handle controlled source/page previews explicitly.
 
-Acceptance: reconstruct the concurrency session from its original materials and review it against the sample. Evaluate another session with a different input mix. Check intentionally failing code, missing sources, poor handwriting, long code blocks, and crowded pages. Never infer verification success from a missing check.
+Acceptance: compare the prototype against the privately supplied sample at readable resolution. No clipping, overlaps, missing glyphs or broken references; code operators copy correctly; diagram labels/arrows agree with the material. Calibrate density and minimum text sizes. Existing shell screenshots do not substitute for document checks.
 
-## 5. Search and initial MCP integration
+## 5. Complete document workflow
 
-Add source/note full-text search and embeddings with project-filtered retrieval. Expose search, source/note reads, project-profile reads, review submissions, and proposed revisions through MCP. Reuse the application services and access checks.
+Extend to complete coverage analysis, section drafting, exercises/answers, applicable code verification, revision notes, bounded repairs and document export. Use one output per class session in the course profile, while keeping other projects flexible. Apply project-specific review policies rather than requiring every stage for every document.
 
-Acceptance: a compatible agent can retrieve verifiable evidence and submit findings visible in the browser; source and note versions are explicit; an agent cannot cross its project permissions. Measure keyword and semantic retrieval against representative questions and exact vector-search baselines.
+Acceptance: reconstruct the concurrency session from original materials and compare it with the sample; evaluate a different session or project with another input mix. Cover missing sources, unclear handwriting, long code, intentional lesson errors and unavailable dependencies. Record unresolved findings explicitly and preserve historical versions.
 
-## 6. Deployable personal knowledge bank
+## 6. Search, caching and product MCP
+
+Add source/note full-text search and project-filtered embeddings through the existing budgeted client. Implement version-aware processing-result reuse and invalidation. Expose project profiles, source/note reads, search, review findings and revision proposals through a thin MCP adapter to shared services.
+
+Acceptance: benchmark retrieval, including selective project filters; preserve evidence locators and distinguish originals from generated notes. Source/profile/model/template changes invalidate the correct derived results. A compatible agent can submit findings visible in the browser, with ownership and immutable versions enforced. The Next.js development MCP remains a separate integration.
+
+## 7. Deployable personal knowledge bank
 
 Add production sign-in, storage configuration, deployment instructions, backups, restore checks, run budgets, retention controls, and operational visibility. Test restart recovery and incomplete external requests. Add additional formats only through the handler contract.
 

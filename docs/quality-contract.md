@@ -1,10 +1,10 @@
 # Quality and review contract
 
-These are acceptance criteria to implement and calibrate, not guarantees of automated correctness.
+These are acceptance criteria to implement and calibrate, not guarantees of automated correctness. Apply the dimensions relevant to a project's purpose, sources and review policy. See the [product brief](product-brief.md) for requirements and the [implementation map](implementation-plan.md) for the template integration.
 
 ## Content
 
-- Each material teaching claim has checked evidence or a clear supplement/correction label.
+- Each material factual or teaching claim has checked evidence or a clear supplement/correction label.
 - Locators resolve to the source version used for the run. Check passage support as well as locator validity.
 - A source-derived checklist records each essential topic, example, question, and assignment as covered, merged, excluded with a reason, or unresolved.
 - Preserve disagreements between sources and distinguish the instructor's explanation from an externally supported correction.
@@ -25,6 +25,8 @@ Preserve exact original code where supplied. Mark adaptations, snippets with omi
 ## Presentation
 
 Use versioned design tokens and components. Check minimum text size, spacing, contrast, code copyability, clipped text, overlaps, glyphs, diagrams, tables, page references, headers/footers and unintended blank pages. Render final PDF pages and inspect at readable resolution. Different content should not be forced into the sample's exact page count.
+
+Calibrate the course template with six representative sample-style pages before expanding to full sessions. Exact visual equivalence is unproven until compared. Preserve original code as canonical and verify PDF copy/paste because font rendering can look correct while extracted operators are corrupted. Application accessibility/screenshot tests and document-page checks cover separate outputs.
 
 ## Review experience
 

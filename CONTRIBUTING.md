@@ -2,6 +2,7 @@
 
 Start with the architecture, roadmap, and quality contract. The current repository is a design starter; implement features in small changes tied to a milestone and report actual capabilities accurately.
 
+- Use [the documentation index](docs/README.md) to find the product requirements, discussion record, decisions, open questions, template assessment and implementation map. Keep them consistent when a decision or capability changes; distinguish confirmed preferences, recommendations, implementation and verification results.
 - Keep domain/application logic independent of HTTP, MCP, and provider-specific clients.
 - Use the handler registry for format support and preserve source/version locators throughout processing.
 - Keep project selection flexible. Allowed file types do not imply that every selected type must be supplied.

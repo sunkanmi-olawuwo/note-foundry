@@ -15,18 +15,20 @@ A personal knowledge bank that turns source material into clear, traceable notes
 
 ## Architecture
 
-One repository with a React/TypeScript frontend and a modular Python/FastAPI backend. A worker runs durable processing jobs. PostgreSQL with pgvector stores application data, searchable source content, embeddings, versions, job state, and reusable processing results. File/object storage holds original files and generated assets.
+The selected direction is one repository with a Next.js/React/TypeScript frontend and a modular Python/FastAPI backend. A worker will run durable processing jobs. PostgreSQL with pgvector will store application data, searchable source content, embeddings, versions, job state, and reusable processing results. File/object storage will hold original files and generated assets.
+
+The implementation recommendation is to adopt the existing `house-template-base`, `house-template-fastapi`, and `house-template-nextjs` Copier layers. The FastAPI layer already integrates LangChain, a budgeted model gateway, embeddings, LangGraph PostgreSQL checkpoints, and optional LangSmith support. These templates have been investigated but have not been applied to this repository.
 
 ```mermaid
 flowchart LR
-    UI[React frontend] --> API[FastAPI HTTP interface]
+    UI[Next.js frontend] --> API[FastAPI HTTP interface]
     Agent[Compatible agent] --> MCP[MCP interface]
     API --> Core[Shared application services]
     MCP --> Core
     Core --> DB[(PostgreSQL + pgvector)]
     Core --> Worker[Python job worker]
     Worker --> DB
-    Worker --> LLM[LLM provider adapter]
+    Worker --> LLM[Existing LangChain model gateway]
     Worker --> Files[File handlers and file storage]
     Worker --> Render[Diagram and document renderers]
 ```
@@ -49,9 +51,16 @@ The first course pilot will use a locally supplied concurrency session. Teaching
 
 ## Read next
 
+- [Documentation index and current status](docs/README.md)
+- [Product brief and requirements](docs/product-brief.md)
+- [Discussion record](docs/discussion-record.md)
+- [Decision register](docs/decisions/README.md)
 - [Architecture and boundaries](docs/architecture.md)
 - [Development roadmap](docs/roadmap.md)
+- [Template assessment](docs/research/template-assessment.md)
+- [Implementation map](docs/implementation-plan.md)
 - [Quality and review contract](docs/quality-contract.md)
+- [Open questions](docs/open-questions.md)
 - [Example project profile](examples/project-profile.json)
 - [Contribution guidance](CONTRIBUTING.md)
 
