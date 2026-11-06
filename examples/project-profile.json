@@ -1,0 +1,26 @@
+{
+  "example_only": true,
+  "profile_schema_version": "draft-1",
+  "name": "FDE Academy",
+  "purpose": "Create clear, source-backed study notes from the material supplied for each class.",
+  "audience": "Beginner with basic Python knowledge",
+  "allowed_handler_ids": ["pdf", "vtt", "srt", "python", "ipynb", "markdown", "text", "zip"],
+  "required_source_roles": [],
+  "instructions": "Explain the problem before the solution. Introduce one concept at a time. Define jargon before using it. Use a small example before internals. Preserve source references and label supplements and corrections.",
+  "output": {
+    "kind": "study_guide",
+    "formats": ["html", "pdf"],
+    "template_id": "notebook",
+    "diagram_policy": "when_helpful",
+    "include_exercises": true,
+    "include_explained_answers": true
+  },
+  "review": {
+    "source_fidelity": true,
+    "coverage": true,
+    "technical_accuracy": true,
+    "simplicity": true,
+    "presentation": true,
+    "code_verification": "when_applicable"
+  }
+}

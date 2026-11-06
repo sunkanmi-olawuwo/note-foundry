@@ -1,0 +1,45 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+secrets/
+*.pem
+*.key
+
+# Private inputs, artifacts, and runtime state
+data/
+uploads/
+storage/
+artifacts/
+outputs/
+logs/
+*.log
+*.db
+*.sqlite
+*.sqlite3
+*.dump
+*.sql.gz
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+*.egg-info/
+
+# Frontend
+node_modules/
+dist/
+build/
+.next/
+coverage/
+
+# Local tools
+.DS_Store
+.idea/
+.vscode/
